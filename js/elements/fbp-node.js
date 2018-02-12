@@ -48,12 +48,12 @@ export class FbpNode extends PolymerElement {
 					position: absolute;
 					top:30px;
 					left:100px;
-					background: #454545;
+					background: rgba(70, 70, 70, 0.92);
 					min-width: 10em;
 					line-height: 1.5em;
 					border-radius: 4px;
 					overflow: hidden;
-					box-shadow: 0px 1px 1px 1px rgba(0,0,0,.2);
+					box-shadow: 0px 1px 1px 1px rgba(0, 0, 0,.2);
 				}
 				.nodename {
 					display: block;
@@ -94,7 +94,7 @@ export class FbpNode extends PolymerElement {
 
 
 	_computeXY() {
-		console.log('_computeXY');
+		//console.log('_computeXY');
 		this.xy = [parseFloat(this.style.left, 10), parseFloat(this.style.top, 10)];
 	}
 

@@ -9,11 +9,11 @@ export class FbpConnection extends PolymerElement {
 		return {
 			inputPort: {
 				type: Object,
-				//observer: '_inputPortChanged'
+				observer: '_inputPortChanged'
 			},
 			outputPort: {
 				type: Object,
-				//observer: '_outputPortChanged'
+				observer: '_outputPortChanged'
 			},
 			inXY: {
 				type: Array,
@@ -30,16 +30,9 @@ export class FbpConnection extends PolymerElement {
 		}
 	}
 
-	ready() {
-		// default values:
-		super.ready();
-	}
-
-	constructor(inXY=[1,2], outXY=[3,4]) {
+	constructor(outXY=[3,4], inXY=[1,2] ) {
 		super();
 		//this.bbox = {left:0, top:0, width:10, height:10, padding:10, in:[0,0], out:[0,0]};
-
-		console.log(inXY);
 		this.inXY = inXY;
 		this.outXY = outXY;
 	}
@@ -62,7 +55,6 @@ export class FbpConnection extends PolymerElement {
 
 	connectedCallback(e) {
 		super.connectedCallback();
-		//this._updateBBox();
 		this.draw();
 	}
 
@@ -92,14 +84,17 @@ export class FbpConnection extends PolymerElement {
 
 		let canvas = this.shadowRoot.querySelector('#canvas');
 		let ctx = canvas.getContext('2d');
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 		ctx.strokeStyle = '#333';
 		ctx.lineWidth = 2;
 
-		// line
+		/* line
 		ctx.beginPath();
 		ctx.moveTo( ...this.inXY );
 		ctx.lineTo( ...this.outXY );
 		ctx.stroke();
+		*/
 
 		// bezier
 		ctx.strokeStyle = '#999';
@@ -114,33 +109,32 @@ export class FbpConnection extends PolymerElement {
 		ctx.lineTo(...this.inXY);
 		ctx.stroke();
 
-		
-		// input
-		ctx.fillStyle = '#83D0F2';
-		ctx.beginPath();
-		ctx.arc(...this.inXY, 5, 0, 2*Math.PI);
-		ctx.fill();
-
+		/*
 		//output
-		ctx.fillStyle = '#E66465';
+		ctx.fillStyle = '#FF0';
 		ctx.beginPath();
 		ctx.arc(...this.outXY, 5, 0, 2*Math.PI);
 		ctx.fill();
+
+		// input
+		ctx.fillStyle = '#0FF';
+		ctx.beginPath();
+		ctx.arc(...this.inXY, 5, 0, 2*Math.PI);
+		ctx.fill();
+		*/
 	}
 
 
 
 	// Called whenever the declared properties change. 
 	_inputPortChanged(newValue, oldValue) {
-		console.log('_inputPortChanged():', newValue);
-		this.bbox.in = this.inputPort.xy;
-		this.inputPort.addEventListener('xy-changed', this._positionChanged.bind(this));
+		//console.log('_inputPortChanged():', newValue);
+		this.inputPort.addEventListener('xy-changed', this._computeXY.bind(this));
 	}
 
 	_outputPortChanged(newValue, oldValue) {
-		console.log('_outputPortChanged():', newValue);
-		this.bbox.out = this.outputPort.xy;
-		this.outputPort.addEventListener('xy-changed', this._positionChanged.bind(this));
+		//console.log('_outputPortChanged():', newValue);
+		this.outputPort.addEventListener('xy-changed', this._computeXY.bind(this));
 	}
 
 	_inXYChanged(newValue, oldValue) {
@@ -174,6 +168,20 @@ export class FbpConnection extends PolymerElement {
 
 	_positionChanged(e) {
 		this._bboxChanged(e);
+	}
+
+	_computeXY(e) {
+		console.log('_computeXY');
+
+		if(this.inputPort) {
+			this.inXY = this.inputPort.xy;
+		}
+		
+		if(this.inputPort) {
+			this.outXY = this.outputPort.xy;
+		}
+		
+		this.draw();
 	}
 
 }

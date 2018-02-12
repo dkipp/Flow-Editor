@@ -24,6 +24,16 @@ export class FbpOutputPort extends PolymerElement {
 		this.xy = [200,200];
 	}
 
+	ready() {
+		this.parentElement.addEventListener('xy-changed', this._computeXY.bind(this));
+		super.ready();
+	}
+
+	connectedCallback(e) {
+		super.connectedCallback();
+		this._computeXY();
+	}
+
 	static get template() {
 		let tpl = document.createElement('template');
 		tpl.innerHTML = `
@@ -45,7 +55,7 @@ export class FbpOutputPort extends PolymerElement {
 
 			</style>
 			<fbp-port-connector></fbp-port-connector>
-			<span class="nodename">[[portname]]</span>
+			<span class="nodename">[[xy]]</span>
 		`;
 		return tpl;
 	}
@@ -61,6 +71,19 @@ export class FbpOutputPort extends PolymerElement {
 		rect.width = dotRect.width;
 		rect.height = dotRect.height;
 		return [rect.x + rect.width, rect.y + rect.height/2];
+	}
+
+	_computeXY(e) {
+
+		this.xy = this.getPortXY();
+		return;
+		
+		let rect = this.getBoundingClientRect();
+		console.log('port::_computeXY', rect);
+
+		if(rect){
+			this.xy = [rect.x, rect.y];
+		}
 	}
 
 }

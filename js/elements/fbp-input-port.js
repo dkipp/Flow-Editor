@@ -64,8 +64,6 @@ export class FbpInputPort extends PolymerElement {
 		let dotRect = this.getBoundingClientRect(); //this.shadowRoot.querySelector('fbp-port-connector').getBoundingClientRect();
 		let parentRect = this.parentNode.getBoundingClientRect();
 
-		console.log(this.parentNode.xy);
-
 		//let style = window.getComputedStyle(dot, null);
 		let rect = new DOMRect();
 		rect.x = (dotRect.x - parentRect.x) + this.parentNode.xy[0];
@@ -77,8 +75,11 @@ export class FbpInputPort extends PolymerElement {
 
 	_computeXY(e) {
 
+		this.xy = this.getPortXY();
+		return;
+
 		let rect = this.getBoundingClientRect();
-		console.log('port::_computeXY', rect);
+		//console.log('port::_computeXY', rect);
 
 		if(rect){
 			

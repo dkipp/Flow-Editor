@@ -6,15 +6,26 @@ document.addEventListener("DOMContentLoaded", initApp);
 
 
 function initApp(){
-	//addRandomNodes();
-	addRandomXYConnections();
+	addRandomNodes();
+	addRandomXYConnections(5,15);
 }
 
 
 function addRandomXYConnections(min=1, max=10) {
 
 	for (let i = 0; i < randRange(min, max); i++) {
-		let connection = new FbpConnection( randomCanvasXY(), randomCanvasXY() );
+
+		let rIn = document.querySelector('#canvas').getRandomInputPort();
+		let rOut = document.querySelector('#canvas').getRandomOutputPort();
+
+		if(rOut.parentNode == rIn.parentNode){
+			continue;
+		}
+
+		let connection = new FbpConnection( rOut.xy, rIn.xy );
+		connection.inputPort = rIn;
+		connection.outputPort = rOut;
+
 		// add connection
 		connection.setAttribute('slot', 'connections');
 		document.querySelector('#canvas').appendChild(connection);
