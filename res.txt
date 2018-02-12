@@ -1,0 +1,9 @@
+Theorie
+
+https://github.com/solettaproject/soletta/wiki/Flow-Based-Programming-Study
+
+
+python libs:
+ - https://github.com/cb109/qtnodes
+ - https://github.com/JLuebben/Floppy
+
