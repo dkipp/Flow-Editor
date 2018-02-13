@@ -8,6 +8,15 @@ document.addEventListener("DOMContentLoaded", initApp);
 function initApp(){
 	addRandomNodes();
 	addRandomXYConnections(5,15);
+
+
+	let rOut = document.querySelector('#canvas').getRandomOutputPort();
+	let tempCon = new FbpConnection([10,10], [100,100]);
+
+	tempCon.outputPort = rOut;
+	tempCon.setAttribute('slot', 'connections');
+	document.querySelector('#canvas').appendChild(tempCon);
+
 }
 
 

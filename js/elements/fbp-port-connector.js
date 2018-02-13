@@ -27,13 +27,9 @@ export class FbpPortConnector extends PolymerElement {
 				}
 
 			</style>
-			<div class="dot" on-click="handleClick"></div>
+			<div class="dot"></div>
 		`;
 		return tpl;
-	}
-
-	handleClick(e) {
-		console.log(e);
 	}
 }
 

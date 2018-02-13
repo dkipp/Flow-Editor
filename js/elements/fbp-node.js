@@ -64,7 +64,7 @@ export class FbpNode extends PolymerElement {
 					margin: auto .4em;
 				}
 			</style>
-			<strong class="nodename"><span>[[xy]]</span></strong>
+			<strong class="nodename"><span>[[label]]</span></strong>
 			<slot></slot>
 		`;
 		return tpl;

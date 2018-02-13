@@ -9,11 +9,11 @@ export class FbpConnection extends PolymerElement {
 		return {
 			inputPort: {
 				type: Object,
-				observer: '_inputPortChanged'
+				observer: '_portChanged'
 			},
 			outputPort: {
 				type: Object,
-				observer: '_outputPortChanged'
+				observer: '_portChanged'
 			},
 			inXY: {
 				type: Array,
@@ -23,10 +23,9 @@ export class FbpConnection extends PolymerElement {
 				type: Array,
 				//observer: '_outputPortChanged'
 			},
-			bbox: {
-				type: Object,
+			mouseXY: {
+				type: Array,
 			}
-
 		}
 	}
 
@@ -35,6 +34,7 @@ export class FbpConnection extends PolymerElement {
 		//this.bbox = {left:0, top:0, width:10, height:10, padding:10, in:[0,0], out:[0,0]};
 		this.inXY = inXY;
 		this.outXY = outXY;
+		this.mouseXY = [0,0];
 	}
 
 	static get template() {
@@ -46,6 +46,7 @@ export class FbpConnection extends PolymerElement {
 					position: absolute;
 					top:0;
 					left:0;
+					mix-blend-mode: screen;
 				}
 			</style>
 			<canvas id="canvas" width="1000px" height="1000px"></div>
@@ -53,34 +54,27 @@ export class FbpConnection extends PolymerElement {
 		return tpl;
 	}
 
-	connectedCallback(e) {
+	connectedCallback() {
 		super.connectedCallback();
 		this.draw();
 	}
 
-	_updateBBox(){
+	disconnectedCallback() {
+		super.disconnectedCallback();
 
-		if(this.inputPort){
-			
-			let xyInput = this.inputPort.getPortXY();
-			let xyOutput = this.outputPort.getPortXY();
-
-			let xMin = Math.min(xyInput[0], xyOutput[0]);
-			let xMax = Math.max(xyInput[0], xyOutput[0]);
-			let yMin = Math.min(xyInput[1], xyOutput[1]);
-			let yMax = Math.max(xyInput[1], xyOutput[1]);
-
-			
-			this.style.top = yMin + 'px';
-			this.style.left = xMin + 'px';
-
-			let canvas = this.shadowRoot.querySelector('#canvas');
-			canvas.width = xMax - xMin;
-			canvas.height = yMax - yMin;
-		}
+		// remove events
 	}
 
 	draw() {
+
+		if( this.isTemp() ){
+			this._drawTempConnection();
+		}else{
+			this._drawValidConnection();
+		}
+	}
+
+	_drawValidConnection() {
 
 		let canvas = this.shadowRoot.querySelector('#canvas');
 		let ctx = canvas.getContext('2d');
@@ -99,24 +93,22 @@ export class FbpConnection extends PolymerElement {
 		// bezier
 		ctx.strokeStyle = '#999';
 		ctx.beginPath();
-		ctx.moveTo(...this.outXY);
-		ctx.lineTo( this.outXY[0] + 5, this.outXY[1] );
+		ctx.moveTo( ...this.outXY);
 		ctx.bezierCurveTo(
 			this.outXY[0] + 100, this.outXY[1],
 			this.inXY[0] - 100, this.inXY[1],
-			this.inXY[0] - 5, this.inXY[1],
+			...this.inXY,
 		);
-		ctx.lineTo(...this.inXY);
 		ctx.stroke();
 
 		/*
-		//output
+		//output dot
 		ctx.fillStyle = '#FF0';
 		ctx.beginPath();
 		ctx.arc(...this.outXY, 5, 0, 2*Math.PI);
 		ctx.fill();
 
-		// input
+		// input dot
 		ctx.fillStyle = '#0FF';
 		ctx.beginPath();
 		ctx.arc(...this.inXY, 5, 0, 2*Math.PI);
@@ -124,17 +116,51 @@ export class FbpConnection extends PolymerElement {
 		*/
 	}
 
+	_drawTempConnection() {
+
+		console.log('_drawTempConnection');
+
+		let canvas = this.shadowRoot.querySelector('#canvas');
+		let ctx = canvas.getContext('2d');
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		//add eventlistener
+		//this.addEventListener('mousemove', this._onMousemove);
+
+
+		// draw output
+		let xy = (this.outputPort)? this.outXY : this.mouseXY;
+		ctx.fillStyle = '#FF0';
+		ctx.beginPath();
+		ctx.arc( ...xy, 5, 0, 2*Math.PI);
+		ctx.fill();
+
+		// draw input
+		xy = (this.inputPort)? this.inXY : this.mouseXY;
+		ctx.fillStyle = '#0FF';
+		ctx.beginPath();
+		ctx.arc(...xy , 5, 0, 2*Math.PI);
+		ctx.fill();
+
+	}
 
 
 	// Called whenever the declared properties change. 
-	_inputPortChanged(newValue, oldValue) {
-		//console.log('_inputPortChanged():', newValue);
-		this.inputPort.addEventListener('xy-changed', this._computeXY.bind(this));
-	}
+	_portChanged(newValue, oldValue) {
+		
+		if(oldValue instanceof HTMLElement) {
+			oldValue.removeEventListener('xy-changed', this._computeXY.bind(this));
+		}
 
-	_outputPortChanged(newValue, oldValue) {
-		//console.log('_outputPortChanged():', newValue);
-		this.outputPort.addEventListener('xy-changed', this._computeXY.bind(this));
+		if(newValue instanceof HTMLElement) {
+			newValue.addEventListener('xy-changed', this._computeXY.bind(this));
+		}
+
+		/*
+		if( !this.isTemp() ){
+			//this.removeEventListener('mousemove', this._onMousemove);
+		}
+		*/
 	}
 
 	_inXYChanged(newValue, oldValue) {
@@ -145,25 +171,6 @@ export class FbpConnection extends PolymerElement {
 		//console.log('_outXYChanged():', newValue);
 	}
 
-	_bboxChanged(newValue, oldValue) {
-		
-		if(this.inputPort.xy && this.outputPort.xy){
-
-			//update position & canvas size
-			let canvas = this.shadowRoot.querySelector('#canvas');
-			canvas.width = Math.max(this.inputPort.xy[0] , this.outputPort.xy[0]);
-			canvas.height = Math.max(this.inputPort.xy[1] ,this.outputPort.xy[1]);
-
-			console.log('update canvas size to:', canvas.width, canvas.height);
-			
-			//this.style.top = (this.bbox.top - this.bbox.padding) + 'px';
-			//this.style.left = (this.bbox.left - this.bbox.padding) + 'px';
-
-			this.draw();
-		}else{
-			console.log('update canvas failed', this.inputPort, this.outputPort);
-		}
-	}
 
 
 	_positionChanged(e) {
@@ -171,7 +178,7 @@ export class FbpConnection extends PolymerElement {
 	}
 
 	_computeXY(e) {
-		console.log('_computeXY');
+		//console.log('_computeXY');
 
 		if(this.inputPort) {
 			this.inXY = this.inputPort.xy;
@@ -182,6 +189,16 @@ export class FbpConnection extends PolymerElement {
 		}
 		
 		this.draw();
+	}
+
+	_onMousemove(e) {
+		this.mouseXY = [e.layerX,e.layerY];
+		this.draw();
+		console.log('_onMousemove', e);
+	}
+
+	isTemp() {
+		return !(this.inputPort && this.outputPort);
 	}
 
 }

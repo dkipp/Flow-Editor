@@ -54,8 +54,8 @@ export class FbpOutputPort extends PolymerElement {
 				}
 
 			</style>
-			<fbp-port-connector></fbp-port-connector>
-			<span class="nodename">[[xy]]</span>
+			<fbp-port-connector on-click="_handleClick"></fbp-port-connector>
+			<span class="nodename">[[portname]]</span>
 		`;
 		return tpl;
 	}
@@ -84,6 +84,11 @@ export class FbpOutputPort extends PolymerElement {
 		if(rect){
 			this.xy = [rect.x, rect.y];
 		}
+	}
+
+	_handleClick(e) {
+		console.log('_handleClick');
+		this.dispatchEvent(new CustomEvent('output-connector-click', {bubbles: true, composed: true} ));
 	}
 
 }

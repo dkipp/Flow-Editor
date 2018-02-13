@@ -5,6 +5,18 @@ export class FbpEditorCanvas extends PolymerElement {
 	
 	static get is() { return 'fbp-editor-canvas' }
 
+	static get properties() {
+		return {
+			tempCon: {
+				type: Object
+			},
+			xy: {
+				type: Array,
+				notify: true
+			}
+		}
+	}
+
 	constructor() {
 		super();
 		this.ddOffset = [];
@@ -29,7 +41,7 @@ export class FbpEditorCanvas extends PolymerElement {
 				.test {
 				}
 			</style>
-			<div id="nodes" on-dragstart="_handleDragstart" on-dragend="_handleDragend">
+			<div id="nodes" on-dragstart="_handleDragstart" on-dragend="_handleDragend" on-output-connector-click="_handleOutputConnectorClick">
 				<slot name="connections"></slot>
 				<slot name="nodes"></slot>
 			</div>
@@ -102,12 +114,14 @@ export class FbpEditorCanvas extends PolymerElement {
 	}
 
 	_handleDragover(e) {
-		//console.log('handleDragover', e);
+		
 		e.preventDefault();
 		return false;
 	}
 
-	
+	_handleOutputConnectorClick(e) {
+		console.log('_handleOutputConnectorClick', e);
+	}
 }
 
 customElements.define(FbpEditorCanvas.is, FbpEditorCanvas);

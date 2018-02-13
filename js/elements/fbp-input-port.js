@@ -53,8 +53,8 @@ export class FbpInputPort extends PolymerElement {
 				}
 
 			</style>
-			<fbp-port-connector></fbp-port-connector>
-			<span class="nodename">[[xy]]</span>
+			<fbp-port-connector on-click="_handleClick"></fbp-port-connector>
+			<span class="nodename">[[portname]]</span>
 			
 		`;
 		return tpl;
@@ -85,6 +85,10 @@ export class FbpInputPort extends PolymerElement {
 			
 			this.xy = [rect.x, rect.y];
 		}
+	}
+
+	_handleClick(e) {
+		console.log(e);
 	}
 
 }
