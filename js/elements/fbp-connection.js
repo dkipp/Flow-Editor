@@ -15,6 +15,16 @@ export class FbpConnection extends PolymerElement {
 				type: Object,
 				observer: '_portChanged'
 			},
+			connected: {
+				type: Boolean,
+				computed: '_computeConnected(outputPort, inputPort)'
+			},
+			open: {
+				type: Boolean,
+				computed: '_computeOpen(outputPort, inputPort)',
+				observer: '_openChanged'
+			},
+
 			inXY: {
 				type: Array,
 				//observer: '_outputPortChanged'
@@ -62,7 +72,25 @@ export class FbpConnection extends PolymerElement {
 	disconnectedCallback() {
 		super.disconnectedCallback();
 
-		// remove events
+		// removes posible events
+		this.outputPort = null;
+		this.inputPort = null;
+	}
+
+
+	_computeConnected(outputPort, inputPort) {
+		return (outputPort instanceof HTMLElement) && (inputPort instanceof HTMLElement);
+	}
+
+	_computeOpen(outputPort, inputPort) {
+		if( this.connected){
+			return false;
+		}
+		return (outputPort instanceof HTMLElement) || (inputPort instanceof HTMLElement);
+	}
+
+	_openChanged(newValue, oldValue) {
+		console.log('_openChanged');
 	}
 
 	draw() {
