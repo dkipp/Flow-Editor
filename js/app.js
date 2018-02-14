@@ -46,7 +46,6 @@ function addRandomNodes(min=5, max=10) {
 	for (let i = 0; i < randRange(min, max); i++) {
 
 		let node = new FbpNode( randomName() );
-		node.setAttribute('id', uuidv4() );
 		node.setAttribute('slot', 'nodes');
 		//console.log(node);
 
@@ -87,8 +86,3 @@ function randRange(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function uuidv4() {
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  )
-}

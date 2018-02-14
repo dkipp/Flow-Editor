@@ -151,7 +151,7 @@ export class FbpEditorCanvas extends PolymerElement {
 	}
 
 	getLooseConnections() {
-		return this.querySelector('fbp-connection[is-loose]');
+		return this.querySelector('fbp-connection[loose]');
 	}
 }
 

@@ -1,12 +1,20 @@
 import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
+import {FbpBaseMixin} from '../mixins/base.js';
 
-
-export class FbpConnection extends PolymerElement {
+export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 	
 	static get is() { return 'fbp-connection' }
 
 	static get properties() {
 		return {
+			in: {
+				type: String,
+				reflectToAttribute: true
+			},
+			out: {
+				type: String,
+				reflectToAttribute: true
+			},
 			inputPort: {
 				type: Object,
 				observer: '_portChanged'
@@ -19,10 +27,10 @@ export class FbpConnection extends PolymerElement {
 				type: Boolean,
 				computed: '_computeConnected(outputPort, inputPort)'
 			},
-			isLoose: {
+			loose: {
 				type: Boolean,
-				computed: '_computeIsLoose(outputPort, inputPort)',
-				observer: '_isLooseChanged',
+				computed: '_computeLoose(outputPort, inputPort)',
+				observer: '_looseChanged',
 				reflectToAttribute: true
 			},
 
@@ -42,7 +50,10 @@ export class FbpConnection extends PolymerElement {
 
 	constructor(outXY=[3,4], inXY=[1,2] ) {
 		super();
-		//this.bbox = {left:0, top:0, width:10, height:10, padding:10, in:[0,0], out:[0,0]};
+		
+		this.in = this.uuidv4();
+		this.out = this.uuidv4();
+
 		this.inXY = inXY;
 		this.outXY = outXY;
 		this.mouseXY = [0,0];
@@ -82,7 +93,7 @@ export class FbpConnection extends PolymerElement {
 		return this.hasOutput() && this.hasInput();
 	}
 
-	_computeIsLoose(outputPort, inputPort) {
+	_computeLoose(outputPort, inputPort) {
 		return !this.isConnected && ( this.hasOutput() || this.hasInput() );
 	}
 
@@ -166,7 +177,7 @@ export class FbpConnection extends PolymerElement {
 		}
 	}
 
-	_isLooseChanged(newValue, oldValue) {
+	_looseChanged(newValue, oldValue) {
 
 		if(oldValue){
 			this.removeEventListener('mousemove', this._onMousemove);

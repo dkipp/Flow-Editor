@@ -1,7 +1,7 @@
 import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
+import {FbpBaseMixin} from '../mixins/base.js';
 
-
-export class FbpNode extends PolymerElement {
+export class FbpNode extends FbpBaseMixin(PolymerElement) {
 
 	constructor(label="") {
 		super();
@@ -29,7 +29,7 @@ export class FbpNode extends PolymerElement {
 				type: Array,
 				notify: true
 			}
-		}
+		};
 	}
 
 	ready() {

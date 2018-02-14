@@ -1,7 +1,7 @@
 import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
+import {FbpBaseMixin} from '../mixins/base.js';
 
-
-export class FbpOutputPort extends PolymerElement {
+export class FbpOutputPort extends FbpBaseMixin(PolymerElement) {
 	
 	static get is() { return 'fbp-output-port' }
 

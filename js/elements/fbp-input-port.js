@@ -1,7 +1,7 @@
 import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
+import {FbpBaseMixin} from '../mixins/base.js';
 
-
-export class FbpInputPort extends PolymerElement {
+export class FbpInputPort extends FbpBaseMixin(PolymerElement) {
 	
 	static get is() { return 'fbp-input-port' }
 
@@ -88,7 +88,8 @@ export class FbpInputPort extends PolymerElement {
 	}
 
 	_handleClick(e) {
-		//console.log(e);
+		console.log(`connected to:${this.id}`, document.querySelectorAll(`fbp-connection[in="${this.id}"]`) );
+
 	}
 
 }
