@@ -87,7 +87,7 @@ export class FbpOutputPort extends PolymerElement {
 	}
 
 	_handleClick(e) {
-		console.log('_handleClick');
+		//console.log('_handleClick');
 		this.dispatchEvent(new CustomEvent('output-connector-click', {bubbles: true, composed: true} ));
 	}
 

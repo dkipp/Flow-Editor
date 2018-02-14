@@ -15,14 +15,15 @@ export class FbpConnection extends PolymerElement {
 				type: Object,
 				observer: '_portChanged'
 			},
-			connected: {
+			isConnected: {
 				type: Boolean,
 				computed: '_computeConnected(outputPort, inputPort)'
 			},
-			open: {
+			isLoose: {
 				type: Boolean,
-				computed: '_computeOpen(outputPort, inputPort)',
-				observer: '_openChanged'
+				computed: '_computeIsLoose(outputPort, inputPort)',
+				observer: '_isLooseChanged',
+				reflectToAttribute: true
 			},
 
 			inXY: {
@@ -72,105 +73,85 @@ export class FbpConnection extends PolymerElement {
 	disconnectedCallback() {
 		super.disconnectedCallback();
 
-		// removes posible events
-		this.outputPort = null;
-		this.inputPort = null;
+		// removes posible bindings to enable gc
+		this.outputPort = undefined;
+		this.inputPort = undefined;
 	}
-
 
 	_computeConnected(outputPort, inputPort) {
-		return (outputPort instanceof HTMLElement) && (inputPort instanceof HTMLElement);
+		return this.hasOutput() && this.hasInput();
 	}
 
-	_computeOpen(outputPort, inputPort) {
-		if( this.connected){
-			return false;
-		}
-		return (outputPort instanceof HTMLElement) || (inputPort instanceof HTMLElement);
+	_computeIsLoose(outputPort, inputPort) {
+		return !this.isConnected && ( this.hasOutput() || this.hasInput() );
 	}
 
-	_openChanged(newValue, oldValue) {
-		console.log('_openChanged');
+	hasOutput() {
+		return (this.outputPort instanceof HTMLElement);
 	}
 
-	draw() {
-
-		if( this.isTemp() ){
-			this._drawTempConnection();
-		}else{
-			this._drawValidConnection();
-		}
+	hasInput() {
+		return (this.inputPort instanceof HTMLElement);
 	}
 
-	_drawValidConnection() {
 
+
+	draw( mouseXY ) {
+
+		// prepare canvas
 		let canvas = this.shadowRoot.querySelector('#canvas');
 		let ctx = canvas.getContext('2d');
+
+		// clear canvas
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+		// set styles
 		ctx.strokeStyle = '#333';
 		ctx.lineWidth = 2;
 
-		/* line
-		ctx.beginPath();
-		ctx.moveTo( ...this.inXY );
-		ctx.lineTo( ...this.outXY );
-		ctx.stroke();
-		*/
 
-		// bezier
+		let startXY, endXY;
+
+		// dont draw if both sides are open
+		if( !this.hasOutput() && !this.hasInput() ){
+			return; 
+		}
+
+		// dont draw if not fully connected and mouseXY undefined
+		if( !this.isConnected && !mouseXY){
+			return;
+		}
+
+
+		startXY = this.hasOutput()? this.outXY : mouseXY;
+		endXY = this.hasInput()? this.inXY : mouseXY;
+
+
+		// drawind the connection
 		ctx.strokeStyle = '#999';
 		ctx.beginPath();
-		ctx.moveTo( ...this.outXY);
+		ctx.moveTo( ...startXY );
 		ctx.bezierCurveTo(
-			this.outXY[0] + 100, this.outXY[1],
-			this.inXY[0] - 100, this.inXY[1],
-			...this.inXY,
+			startXY[0] + 100, startXY[1],
+			endXY[0] - 100, endXY[1],
+			...endXY,
 		);
 		ctx.stroke();
 
-		/*
-		//output dot
-		ctx.fillStyle = '#FF0';
-		ctx.beginPath();
-		ctx.arc(...this.outXY, 5, 0, 2*Math.PI);
-		ctx.fill();
-
-		// input dot
-		ctx.fillStyle = '#0FF';
-		ctx.beginPath();
-		ctx.arc(...this.inXY, 5, 0, 2*Math.PI);
-		ctx.fill();
-		*/
-	}
-
-	_drawTempConnection() {
-
-		console.log('_drawTempConnection');
-
-		let canvas = this.shadowRoot.querySelector('#canvas');
-		let ctx = canvas.getContext('2d');
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-		//add eventlistener
-		//this.addEventListener('mousemove', this._onMousemove);
-
-
 		// draw output
-		let xy = (this.outputPort)? this.outXY : this.mouseXY;
 		ctx.fillStyle = '#FF0';
 		ctx.beginPath();
-		ctx.arc( ...xy, 5, 0, 2*Math.PI);
+		ctx.arc( ...startXY, 5, 0, 2*Math.PI);
 		ctx.fill();
 
 		// draw input
-		xy = (this.inputPort)? this.inXY : this.mouseXY;
 		ctx.fillStyle = '#0FF';
 		ctx.beginPath();
-		ctx.arc(...xy , 5, 0, 2*Math.PI);
+		ctx.arc(...endXY , 5, 0, 2*Math.PI);
 		ctx.fill();
 
 	}
+
 
 
 	// Called whenever the declared properties change. 
@@ -183,27 +164,19 @@ export class FbpConnection extends PolymerElement {
 		if(newValue instanceof HTMLElement) {
 			newValue.addEventListener('xy-changed', this._computeXY.bind(this));
 		}
+	}
 
-		/*
-		if( !this.isTemp() ){
-			//this.removeEventListener('mousemove', this._onMousemove);
+	_isLooseChanged(newValue, oldValue) {
+
+		if(oldValue){
+			this.removeEventListener('mousemove', this._onMousemove);
 		}
-		*/
+
+		if(newValue){
+			this.addEventListener('mousemove', this._onMousemove);
+		}
 	}
 
-	_inXYChanged(newValue, oldValue) {
-		console.log('_inXYChanged():', newValue);
-	}
-
-	_outXYChanged(newValue, oldValue) {
-		//console.log('_outXYChanged():', newValue);
-	}
-
-
-
-	_positionChanged(e) {
-		this._bboxChanged(e);
-	}
 
 	_computeXY(e) {
 		//console.log('_computeXY');
@@ -220,13 +193,9 @@ export class FbpConnection extends PolymerElement {
 	}
 
 	_onMousemove(e) {
-		this.mouseXY = [e.layerX,e.layerY];
-		this.draw();
-		console.log('_onMousemove', e);
-	}
-
-	isTemp() {
-		return !(this.inputPort && this.outputPort);
+		//this.mouseXY = [e.layerX,e.layerY];
+		this.draw( [e.layerX, e.layerY] );
+		//console.log('_onMousemove', e);
 	}
 
 }

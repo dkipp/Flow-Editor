@@ -88,7 +88,7 @@ export class FbpInputPort extends PolymerElement {
 	}
 
 	_handleClick(e) {
-		console.log(e);
+		//console.log(e);
 	}
 
 }

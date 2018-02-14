@@ -10,10 +10,10 @@ function initApp(){
 	addRandomXYConnections(5,15);
 
 
-	let rOut = document.querySelector('#canvas').getRandomOutputPort();
-	let tempCon = new FbpConnection([10,10], [100,100]);
+	let rIn = document.querySelector('#canvas').getRandomInputPort();
+	let tempCon = new FbpConnection([150,150], [100,100]);
 
-	tempCon.outputPort = rOut;
+	tempCon.inputPort = rIn;
 	tempCon.setAttribute('slot', 'connections');
 	document.querySelector('#canvas').appendChild(tempCon);
 

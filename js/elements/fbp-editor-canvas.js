@@ -41,7 +41,7 @@ export class FbpEditorCanvas extends PolymerElement {
 				.test {
 				}
 			</style>
-			<div id="nodes" on-dragstart="_handleDragstart" on-dragend="_handleDragend" on-output-connector-click="_handleOutputConnectorClick">
+			<div id="nodes" on-dragstart="_handleDragstart" on-dragend="_handleDragend" on-input-connector-click="_handleInputConnectorClick" on-output-connector-click="_handleOutputConnectorClick">
 				<slot name="connections"></slot>
 				<slot name="nodes"></slot>
 			</div>
@@ -120,7 +120,38 @@ export class FbpEditorCanvas extends PolymerElement {
 	}
 
 	_handleOutputConnectorClick(e) {
-		console.log('_handleOutputConnectorClick', e);
+		//console.log('_handleOutputConnectorClick', e);
+
+		let lc = this.getLooseConnections();
+
+		if( lc && !lc.hasOutput() ){
+			lc.outputPort = e.srcElement;
+		}else{
+			//create a new one?
+		}
+	}
+
+	_handleInputConnectorClick(e) {
+		//console.log('_handleOutputConnectorClick', e);
+
+		let lc = this.getLooseConnections();
+		let port = e.srcElement;
+
+		console.log(port);
+
+		if( lc && !lc.hasInput() ){
+			lc.inputPort = e.srcElement;
+		}else{
+			//create a new one?
+		}
+	}
+
+	hasLooseConnections() {
+		return Boolean(this.querySelector('fbp-connection[is-loose]'));
+	}
+
+	getLooseConnections() {
+		return this.querySelector('fbp-connection[is-loose]');
 	}
 }
 
