@@ -8,6 +8,11 @@ export class FbpInputPort extends FbpBaseMixin(PolymerElement) {
 	// Declare properties for the element's public API
 	static get properties() {
 		return {
+			label: {
+				type: String,
+				value: "in",
+				reflectToAttribute: true
+			},
 			portname: {
 				type: String,
 				value: "In"
@@ -19,8 +24,11 @@ export class FbpInputPort extends FbpBaseMixin(PolymerElement) {
 		}
 	}
 
-	constructor() {
+	constructor(label) {
 		super();
+
+		if(label) { this.label = label; }
+		
 		this.xy = [200,200];
 	}
 
@@ -46,15 +54,17 @@ export class FbpInputPort extends FbpBaseMixin(PolymerElement) {
 					_height: 1.5em;
 				}
 				fbp-port-connector {
-					_padding: 0 .4em;
+					padding: 0 .4em;
 				}
 				span {
 					flex-grow: 1;
+					color: #DDD;
+					font-size: .7rem;
 				}
 
 			</style>
 			<fbp-port-connector on-click="_handleClick"></fbp-port-connector>
-			<span class="nodename">[[portname]]</span>
+			<span class="nodename">[[label]]</span>
 			
 		`;
 		return tpl;

@@ -1,15 +1,11 @@
 import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
+import {FbpOutputPort} from './fbp-output-port.js';
+import {FbpInputPort} from './fbp-input-port.js';
 import {FbpBaseMixin} from '../mixins/base.js';
+
 
 export class FbpNode extends FbpBaseMixin(PolymerElement) {
 
-	constructor(label="") {
-		super();
-		if (label) {
-			this.label = label;
-		}
-	}
-	
 	static get is() { return 'fbp-node' }
 
 	// Declare properties for the element's public API
@@ -31,6 +27,32 @@ export class FbpNode extends FbpBaseMixin(PolymerElement) {
 			}
 		};
 	}
+
+
+	constructor(label="") {
+		super();
+		if (label) {
+			this.label = label;
+		}
+	}
+
+
+	createOut(label) {
+		let port = new FbpOutputPort(label);
+		port.setAttribute('slot', 'out');
+		this.appendChild(port);
+	}
+
+	createIn(label) {
+		let port = new FbpInputPort(label);
+		port.setAttribute('slot', 'in');
+		this.appendChild(port);
+	}
+
+
+
+/* */
+
 
 	ready() {
 		this.xy = [0,0];
@@ -58,6 +80,7 @@ export class FbpNode extends FbpBaseMixin(PolymerElement) {
 				.nodename {
 					display: block;
 					text-align:center;
+					font-size: .8rem;
 				}
 				.nodename span {
 					display: inline-block;
@@ -65,7 +88,8 @@ export class FbpNode extends FbpBaseMixin(PolymerElement) {
 				}
 			</style>
 			<strong class="nodename"><span>[[label]]</span></strong>
-			<slot></slot>
+			<slot name="in"></slot>
+			<slot name="out"></slot>
 		`;
 		return tpl;
 	}
@@ -98,7 +122,7 @@ export class FbpNode extends FbpBaseMixin(PolymerElement) {
 			col = '#'+ Math.random().toString(16).slice(-6);
 			contrast = this.hex2YIQ(col);
 		}
-		while( contrast > 160 || contrast < 20);
+		while( contrast > 150 || contrast < 20);
 
 		console.log('contrast:', contrast);
 		this.shadowRoot.querySelector('.nodename').style.backgroundColor = col;

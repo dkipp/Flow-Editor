@@ -10,13 +10,37 @@ function initApp(){
 	addRandomXYConnections(5,15);
 
 
-	let rIn = document.querySelector('#canvas').getRandomInputPort();
+	let rIn = document.querySelector('#editor').getRandomInputPort();
 	let tempCon = new FbpConnection([150,150], [100,100]);
 
+	/*
 	tempCon.inputPort = rIn;
 	tempCon.setAttribute('slot', 'connections');
-	document.querySelector('#canvas').appendChild(tempCon);
+	document.querySelector('#editor').appendChild(tempCon);
+	*/
 
+}
+
+
+function addRandomNodes(min=5, max=10) {
+
+	for (let i = 0; i < randRange(min, max); i++) {
+
+		let node = new FbpNode( randomName() );
+		//console.log(node);
+
+		randomPosition(node, 20, 700);
+
+		for (let i = 0; i < randRange(1, 4); i++) {
+			node.createIn( randomName() );  //document.createElement("fbp-input-port")
+		}
+
+		for (let i = 0; i < randRange(1, 2); i++) {
+			node.createOut( randomName() ); //document.createElement("fbp-output-port")
+		}
+
+		document.querySelector('#editor').addNode(node);
+	}
 }
 
 
@@ -24,8 +48,8 @@ function addRandomXYConnections(min=1, max=10) {
 
 	for (let i = 0; i < randRange(min, max); i++) {
 
-		let rIn = document.querySelector('#canvas').getRandomInputPort();
-		let rOut = document.querySelector('#canvas').getRandomOutputPort();
+		let rIn = document.querySelector('#editor').getRandomInputPort();
+		let rOut = document.querySelector('#editor').getRandomOutputPort();
 
 		if(rOut.parentNode == rIn.parentNode){
 			continue;
@@ -37,29 +61,7 @@ function addRandomXYConnections(min=1, max=10) {
 
 		// add connection
 		connection.setAttribute('slot', 'connections');
-		document.querySelector('#canvas').appendChild(connection);
-	}
-}
-
-
-function addRandomNodes(min=5, max=10) {
-	for (let i = 0; i < randRange(min, max); i++) {
-
-		let node = new FbpNode( randomName() );
-		node.setAttribute('slot', 'nodes');
-		//console.log(node);
-
-		randomPosition(node, 20, 700);
-
-		for (let i = 0; i < randRange(1, 4); i++) {
-			node.appendChild( document.createElement("fbp-input-port") );
-		}
-
-		for (let i = 0; i < randRange(1, 2); i++) {
-			node.appendChild( document.createElement("fbp-output-port") );
-		}
-
-		document.querySelector('#canvas').appendChild(node);
+		document.querySelector('#editor').appendChild(connection);
 	}
 }
 
@@ -69,7 +71,7 @@ function randomName(){
 }
 
 function randomCanvasXY() {
-	let c = document.querySelector('#canvas');
+	let c = document.querySelector('#editor');
 	let rX = randRange(0, 900);
 	let rY = randRange(0, 700);
 	return [rX, rY];

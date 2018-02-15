@@ -22,6 +22,22 @@ export class FbpEditorCanvas extends PolymerElement {
 		this.ddOffset = [];
 	}
 
+	addNode(node) {
+		node.setAttribute('slot', 'nodes');
+		this.appendChild(node);
+	}
+
+	removeNode(node) {
+		if( !this.contains(node) ){
+			this.removeChild(node);
+		}
+	}
+
+	addConnection( connection ) {
+		connection.setAttribute('slot', 'connections');
+		this.appendChild(node);
+	}
+
 	static get template() {
 		let tpl = document.createElement('template');
 		tpl.innerHTML = `
