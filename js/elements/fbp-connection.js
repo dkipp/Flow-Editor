@@ -117,7 +117,7 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		// set styles
-		ctx.strokeStyle = '#333';
+		ctx.strokeStyle = '#999'; //this._getRandColor();
 		ctx.lineWidth = 2;
 
 
@@ -139,7 +139,6 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 
 
 		// drawind the connection
-		ctx.strokeStyle = '#999';
 		ctx.beginPath();
 		ctx.moveTo( ...startXY );
 		ctx.bezierCurveTo(
@@ -207,6 +206,22 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		//this.mouseXY = [e.layerX,e.layerY];
 		this.draw( [e.layerX, e.layerY] );
 		//console.log('_onMousemove', e);
+	}
+
+
+
+	_getRandColor() {
+		// ToDo: Optimize color based on:
+		// http://juicystudio.com/article/luminositycontrastratioalgorithm.php#ccalgorithms
+		let contrast, col;
+
+		do {
+			col = '#'+ Math.random().toString(16).slice(-6);
+			contrast = this.hex2YIQ(col);
+		}
+		while( (contrast < 200) || (contrast > 240));
+
+		return col;
 	}
 
 }

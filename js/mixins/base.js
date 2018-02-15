@@ -25,4 +25,12 @@ export const FbpBaseMixin = (superClass) => class extends superClass {
 	static rgb2YIQ(r, g, b) {
 		return ((r*299)+(g*587)+(b*114))/1000;
 	}
+
+	hex2YIQ(hex) {
+		let	r = parseInt(hex.substr(1, 2), 16),
+				g = parseInt(hex.substr(3, 2), 16),
+				b = parseInt(hex.substr(5, 2), 16);
+
+		return ((r * 299) + (g * 587) + (b * 114)) / 1000;
+	}
 }

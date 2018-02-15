@@ -86,10 +86,22 @@ export class FbpNode extends FbpBaseMixin(PolymerElement) {
 
 	// Called whenever the declared properties change. 
 	_nodenameChanged(newValue, oldValue) {
+		this._setNodeColor(newValue);
+	}
 
+	_setNodeColor(label) {
 		// ToDo: Optimize color based on:
 		// http://juicystudio.com/article/luminositycontrastratioalgorithm.php#ccalgorithms
-		this.shadowRoot.querySelector('.nodename').style.backgroundColor = '#'+Math.random().toString(16).slice(-6);
+		let contrast, col;
+
+		do {
+			col = '#'+ Math.random().toString(16).slice(-6);
+			contrast = this.hex2YIQ(col);
+		}
+		while( contrast > 160 || contrast < 20);
+
+		console.log('contrast:', contrast);
+		this.shadowRoot.querySelector('.nodename').style.backgroundColor = col;
 	}
 
 
