@@ -15,9 +15,9 @@ export class FbpPortConnector extends PolymerElement {
 				.dot {
 					background: #777;
 					cursor: pointer;
-					_width: 4px;
-					_height: 4px;
-					_border-radius: 3px;
+					width: 3px;
+					height: 3px;
+					border-radius: 3px;
 					border: 2px solid #777;
 					_margin: auto .4em;
 				}
