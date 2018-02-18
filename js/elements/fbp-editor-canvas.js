@@ -38,6 +38,12 @@ export class FbpEditorCanvas extends PolymerElement {
 		this.appendChild(node);
 	}
 
+
+	//unused
+	connectionsByPortID(id){
+		return this.querySelectorAll(`fbp-connection[in="${id}"], fbp-connection[out="${id}"]`);
+	}
+
 	static get template() {
 		let tpl = document.createElement('template');
 		tpl.innerHTML = `

@@ -1,18 +1,13 @@
 import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
-import {FbpBaseMixin} from '../mixins/base.js';
+import {FbpPort} from './fbp-port.js';
 
-export class FbpOutputPort extends FbpBaseMixin(PolymerElement) {
+export class FbpOutputPort extends FbpPort {
 	
 	static get is() { return 'fbp-output-port' }
 
 	// Declare properties for the element's public API
 	static get properties() {
 		return {
-			label: {
-				type: String,
-				value: "in",
-				reflectToAttribute: true
-			},
 			portname: {
 				type: String,
 				value: "Out"
@@ -20,15 +15,13 @@ export class FbpOutputPort extends FbpBaseMixin(PolymerElement) {
 			xy: {
 				type: Array,
 				notify: true
-			}
+			},
+
 		}
 	}
 
-	constructor(label) {
-		super();
-
-		if(label) {	this.label = label;	}
-
+	constructor(options) {
+		super(options);
 		this.xy = [200,200];
 	}
 
@@ -40,6 +33,8 @@ export class FbpOutputPort extends FbpBaseMixin(PolymerElement) {
 	connectedCallback(e) {
 		super.connectedCallback();
 		this._computeXY();
+
+		this.getConnections();
 	}
 
 	static get template() {
