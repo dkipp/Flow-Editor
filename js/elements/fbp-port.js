@@ -1,0 +1,52 @@
+import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
+import {FbpBaseMixin} from '../mixins/base.js';
+
+export class FbpPort extends FbpBaseMixin(PolymerElement) {
+	
+	static get is() { return 'fbp-port' }
+
+	// Declare properties for the element's public API
+	static get properties() {
+		return {
+			label: {
+				type: String,
+				value: "in",
+				reflectToAttribute: true
+			},
+			connected: {
+				type: Boolean,
+				value: false,
+				notify: true,
+				readOnly: true,
+				reflectToAttribute: true
+			},
+			rule: {
+				type: String,
+				value: '+',
+				reflectToAttribute: true
+			}
+		}
+	}
+
+	constructor(options) {
+		super();
+		this.label = (options && options.label) || 'label';
+	}
+
+	editorCanvas() {
+		return this.closest('fbp-editor-canvas');
+	}
+
+	connections() {
+		return this.editorCanvas().connectionsByPortID(this.id);
+	}
+
+	stupidMethodName() {
+		// set read-only property
+		this._setConnected( this.connections().length > 0 );
+	}
+
+
+}
+
+customElements.define(FbpPort.is, FbpPort);
