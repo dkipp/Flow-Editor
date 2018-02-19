@@ -34,7 +34,7 @@ export class FbpOutputPort extends FbpPort {
 		super.connectedCallback();
 		this._computeXY();
 
-		this.getConnections();
+		//this.connections();
 	}
 
 	static get template() {
