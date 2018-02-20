@@ -44,6 +44,20 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 			},
 			mouseXY: {
 				type: Array,
+			},
+
+			_distance: {
+				type: Number,
+				computed: '_computeDistance(inXY, outXY)'
+			},
+			_distanceX: {
+				type: Number,
+				computed: '_computeDistanceX(inXY, outXY)'
+			},
+
+			_distanceY: {
+				type: Number,
+				computed: '_computeDistanceY(inXY, outXY)'
 			}
 		}
 	}
@@ -51,8 +65,8 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 	constructor(outXY=[3,4], inXY=[1,2] ) {
 		super();
 		
-		this.in = this.uuidv4();
-		this.out = this.uuidv4();
+		//this.in = this.uuidv4();
+		//this.out = this.uuidv4();
 
 		this.inXY = inXY;
 		this.outXY = outXY;
@@ -142,8 +156,8 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		ctx.beginPath();
 		ctx.moveTo( ...startXY );
 		ctx.bezierCurveTo(
-			startXY[0] + 100, startXY[1],
-			endXY[0] - 100, endXY[1],
+			startXY[0] + Math.abs(this._distanceX/3), startXY[1],
+			endXY[0] - Math.abs(this._distanceX/3), endXY[1],
 			...endXY,
 		);
 		ctx.stroke();
@@ -225,6 +239,16 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		return col;
 	}
 
+
+	_computeDistance(inXY, outXY) {
+		return Math.sqrt( Math.pow( outXY[0] - inXY[0], 2) + Math.pow( outXY[0] - inXY[0], 2) );
+	}
+	_computeDistanceX(inXY, outXY) {
+		return ( inXY[0] - outXY[0]);
+	}
+	_computeDistanceY(inXY, outXY) {
+		return Math.abs( outXY[0] - inXY[0]);
+	}
 }
 
 customElements.define(FbpConnection.is, FbpConnection);

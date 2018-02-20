@@ -34,6 +34,7 @@ export class FbpPort extends FbpBaseMixin(PolymerElement) {
 			},
 			valid: {
 				type: Boolean,
+				value: false,
 				computed: '_conmputeValid(connected, rule)'
 			}
 		}
@@ -42,10 +43,6 @@ export class FbpPort extends FbpBaseMixin(PolymerElement) {
 	constructor(options) {
 		super();
 		this.label = (options && options.label) || 'label';
-	}
-
-	editorCanvas() {
-		return this.closest('fbp-editor-canvas');
 	}
 
 	connections() {
