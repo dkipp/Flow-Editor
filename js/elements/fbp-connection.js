@@ -148,6 +148,7 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		);
 		ctx.stroke();
 
+		/*
 		// draw output
 		ctx.fillStyle = '#FF0';
 		ctx.beginPath();
@@ -159,7 +160,7 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		ctx.beginPath();
 		ctx.arc(...endXY , 5, 0, 2*Math.PI);
 		ctx.fill();
-
+		*/
 	}
 
 

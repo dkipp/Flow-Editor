@@ -20,10 +20,21 @@ export class FbpPort extends FbpBaseMixin(PolymerElement) {
 				readOnly: true,
 				reflectToAttribute: true
 			},
+
+			/*
+				'' Only One
+				'+' Minimum One
+				'*' Zero or More
+				'?' Zero or One
+			*/
 			rule: {
 				type: String,
-				value: '+',
+				value: '?',
 				reflectToAttribute: true
+			},
+			valid: {
+				type: Boolean,
+				computed: '_conmputeValid(connected, rule)'
 			}
 		}
 	}
@@ -44,6 +55,11 @@ export class FbpPort extends FbpBaseMixin(PolymerElement) {
 	stupidMethodName() {
 		// set read-only property
 		this._setConnected( this.connections().length > 0 );
+	}
+
+	_conmputeValid(connected, rule) {
+		console.log('_conmputeValid');
+		return true;
 	}
 
 

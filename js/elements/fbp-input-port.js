@@ -80,7 +80,7 @@ export class FbpInputPort extends FbpBaseMixin(PolymerElement) {
 		rect.y = (dotRect.y - parentRect.y) + this.parentNode.xy[1];
 		rect.width = dotRect.width;
 		rect.height = dotRect.height;
-		return [rect.x+8.5, rect.y + rect.height/2];
+		return [rect.x+9.5, rect.y + rect.height/2];
 	}
 
 	_computeXY(e) {

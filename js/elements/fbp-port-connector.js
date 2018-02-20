@@ -15,15 +15,16 @@ export class FbpPortConnector extends PolymerElement {
 				.dot {
 					background: #777;
 					cursor: pointer;
-					width: 3px;
-					height: 3px;
-					border-radius: 3px;
-					border: 2px solid #777;
-					_margin: auto .4em;
+					width: 5px;
+					height: 5px;
+					border-radius: 4px;
+					_border: 1px solid #777;
+					margin: auto 2px;
 				}
 				.dot:hover, .dot.selected {
-					background: #000;
-					border-color: #329B6E;
+					_background: #000;
+					margin: auto 0;
+					border: 2px solid #999;
 				}
 
 			</style>

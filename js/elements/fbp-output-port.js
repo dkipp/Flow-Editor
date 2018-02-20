@@ -75,7 +75,7 @@ export class FbpOutputPort extends FbpPort {
 		rect.y = (dotRect.y - parentRect.y) + parseFloat(this.parentNode.style.top, 10);
 		rect.width = dotRect.width;
 		rect.height = dotRect.height;
-		return [rect.x + rect.width - 8.5, rect.y + rect.height/2];
+		return [rect.x + rect.width - 9.5, rect.y + rect.height/2];
 	}
 
 	_computeXY(e) {
