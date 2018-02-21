@@ -35,27 +35,27 @@ export class FbpPort extends FbpBaseMixin(PolymerElement) {
 			valid: {
 				type: Boolean,
 				value: false,
-				computed: '_conmputeValid(connected, rule)'
+				computed: '_computeValid(connected, rule)'
 			}
 		}
 	}
 
 	constructor(options) {
 		super();
-		this.label = (options && options.label) || 'label';
+		this.label = (options && options.label)? options.label : 'label';
 	}
 
 	connections() {
 		return this.editorCanvas().connectionsByPortID(this.id);
 	}
 
-	stupidMethodName() {
+	updateConnectionState() {
 		// set read-only property
 		this._setConnected( this.connections().length > 0 );
 	}
 
-	_conmputeValid(connected, rule) {
-		console.log('_conmputeValid');
+	_computeValid(connected, rule) {
+		console.log('_computeValid');
 		return true;
 	}
 

@@ -9,38 +9,40 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		return {
 			in: {
 				type: String,
+				observer: '_inChanged',
 				reflectToAttribute: true
 			},
 			out: {
 				type: String,
+				observer: '_outChanged',
 				reflectToAttribute: true
 			},
-			inputPort: {
+			_pIn: {
 				type: Object,
 				observer: '_portChanged'
 			},
-			outputPort: {
+			_pOut: {
 				type: Object,
 				observer: '_portChanged'
 			},
 			isConnected: {
 				type: Boolean,
-				computed: '_computeConnected(outputPort, inputPort)'
+				computed: '_computeConnected(_pOut, _pIn)'
 			},
 			loose: {
 				type: Boolean,
-				computed: '_computeLoose(outputPort, inputPort)',
+				computed: '_computeLoose(_pOut, _pIn)',
 				observer: '_looseChanged',
 				reflectToAttribute: true
 			},
 
 			inXY: {
 				type: Array,
-				//observer: '_outputPortChanged'
+				//observer: '__pOutChanged'
 			},
 			outXY: {
 				type: Array,
-				//observer: '_outputPortChanged'
+				//observer: '__pOutChanged'
 			},
 			mouseXY: {
 				type: Array,
@@ -99,24 +101,24 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		super.disconnectedCallback();
 
 		// removes posible bindings to enable gc
-		this.outputPort = undefined;
-		this.inputPort = undefined;
+		this._pOut = undefined;
+		this._pIn = undefined;
 	}
 
-	_computeConnected(outputPort, inputPort) {
+	_computeConnected(_pOut, _pIn) {
 		return this.hasOutput() && this.hasInput();
 	}
 
-	_computeLoose(outputPort, inputPort) {
+	_computeLoose(_pOut, _pIn) {
 		return !this.isConnected && ( this.hasOutput() || this.hasInput() );
 	}
 
 	hasOutput() {
-		return (this.outputPort instanceof HTMLElement);
+		return (this._pOut instanceof HTMLElement);
 	}
 
 	hasInput() {
-		return (this.inputPort instanceof HTMLElement);
+		return (this._pIn instanceof HTMLElement);
 	}
 
 
@@ -184,10 +186,14 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		
 		if(oldValue instanceof HTMLElement) {
 			oldValue.removeEventListener('xy-changed', this._computeXY.bind(this));
+			oldValue.updateConnectionState();
+
+			// ToDo: informe port
 		}
 
 		if(newValue instanceof HTMLElement) {
 			newValue.addEventListener('xy-changed', this._computeXY.bind(this));
+			newValue.updateConnectionState();
 		}
 	}
 
@@ -206,12 +212,12 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 	_computeXY(e) {
 		//console.log('_computeXY');
 
-		if(this.inputPort) {
-			this.inXY = this.inputPort.xy;
+		if(this._pIn) {
+			this.inXY = this._pIn.xy;
 		}
 		
-		if(this.inputPort) {
-			this.outXY = this.outputPort.xy;
+		if(this._pIn) {
+			this.outXY = this._pOut.xy;
 		}
 		
 		this.draw();
@@ -238,6 +244,28 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 
 		return col;
 	}
+
+
+
+	_inChanged(newValue, oldValue) {
+		//console.log('_inChanged', newValue);
+		this._pIn = document.getElementById(newValue);
+	}
+	/*
+	_pInChanged(newValue, oldValue) {
+		//console.log('_pInChanged', newValue);
+	}
+	*/
+
+	_outChanged(newValue, oldValue) {
+		this._pOut = document.getElementById(newValue);
+	}
+	/*
+	_pOutChanged(newValue, oldValue) {
+		//console.log('_pOutChanged', newValue);
+	}
+	*/
+
 
 
 	_computeDistance(inXY, outXY) {

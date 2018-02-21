@@ -1,7 +1,7 @@
 import { Element as PolymerElement } from '../polymer-3.0-preview/polymer-element.js';
-import {FbpBaseMixin} from '../mixins/base.js';
+import {FbpPort} from './fbp-port.js';
 
-export class FbpInputPort extends FbpBaseMixin(PolymerElement) {
+export class FbpInputPort extends FbpPort {
 	
 	static get is() { return 'fbp-input-port' }
 
@@ -60,6 +60,10 @@ export class FbpInputPort extends FbpBaseMixin(PolymerElement) {
 					flex-grow: 1;
 					color: #DDD;
 					font-size: .7rem;
+				}
+
+				:host([connected]) fbp-port-connector {
+					background: #765;
 				}
 
 			</style>

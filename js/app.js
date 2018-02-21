@@ -56,8 +56,8 @@ function addRandomXYConnections(min=1, max=10) {
 		}
 
 		let connection = new FbpConnection( rOut.xy, rIn.xy );
-		connection.inputPort = rIn;
-		connection.outputPort = rOut;
+		connection.in = rIn.id;
+		connection.out = rOut.id;
 
 		// add connection
 		connection.setAttribute('slot', 'connections');
