@@ -29,22 +29,24 @@ export class FbpNode extends FbpBaseMixin(PolymerElement) {
 	}
 
 
-	constructor(label="") {
-		super();
-		if (label) {
-			this.label = label;
+	constructor(options) {
+		
+		super(options);
+
+		if(options && options.label){
+			this.label = options.label;
 		}
 	}
 
 
-	createOut(label) {
-		let port = new FbpOutputPort(label);
+	createOut(options) {
+		let port = new FbpOutputPort(options);
 		port.setAttribute('slot', 'out');
 		this.appendChild(port);
 	}
 
-	createIn(label) {
-		let port = new FbpInputPort(label);
+	createIn(options) {
+		let port = new FbpInputPort(options);
 		port.setAttribute('slot', 'in');
 		this.appendChild(port);
 	}

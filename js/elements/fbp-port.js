@@ -41,8 +41,12 @@ export class FbpPort extends FbpBaseMixin(PolymerElement) {
 	}
 
 	constructor(options) {
-		super();
-		this.label = (options && options.label)? options.label : 'label';
+		
+		super(options);
+		
+		if(options && options.label){
+			this.label = options.label;
+		}
 	}
 
 	connections() {

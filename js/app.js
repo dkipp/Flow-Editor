@@ -24,20 +24,21 @@ function initApp(){
 
 function addRandomNodes(min=5, max=10) {
 
+	let mathMethods = getAllMethods(Math);
+
 	for (let i = 0; i < randRange(min, max); i++) {
 
-		let node = new FbpNode( randomName() );
+		let name = mathMethods[Math.floor(Math.random()*mathMethods.length)];
+		let node = new FbpNode( {label:'Math.'+name} );
 		//console.log(node);
 
 		randomPosition(node, 20, 700);
 
 		for (let i = 0; i < randRange(1, 4); i++) {
-			node.createIn( randomName() );  //document.createElement("fbp-input-port")
+			node.createIn({label: randomName()} );  //document.createElement("fbp-input-port")
 		}
 
-		for (let i = 0; i < randRange(1, 2); i++) {
-			node.createOut( randomName() ); //document.createElement("fbp-output-port")
-		}
+		node.createOut( {label:name} ); //document.createElement("fbp-output-port")
 
 		document.querySelector('#editor').addNode(node);
 	}

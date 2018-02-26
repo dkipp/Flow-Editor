@@ -24,11 +24,8 @@ export class FbpInputPort extends FbpPort {
 		}
 	}
 
-	constructor(label) {
-		super();
-
-		if(label) { this.label = label; }
-		
+	constructor(options) {
+		super(options);
 		this.xy = [200,200];
 	}
 
