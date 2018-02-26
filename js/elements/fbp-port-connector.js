@@ -12,7 +12,7 @@ export class FbpPortConnector extends PolymerElement {
 				:host {
 					display: inline-block;
 				}
-				.dot {
+				.connector {
 					background: #777;
 					cursor: pointer;
 					width: 5px;
@@ -21,14 +21,14 @@ export class FbpPortConnector extends PolymerElement {
 					_border: 1px solid #777;
 					margin: auto 2px;
 				}
-				.dot:hover, .dot.selected {
+				.connector:hover, .connector.selected {
 					_background: #000;
 					margin: auto 0;
 					border: 2px solid #999;
 				}
 
 			</style>
-			<div class="dot"></div>
+			<div class="connector"></div>
 		`;
 		return tpl;
 	}

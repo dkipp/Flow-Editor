@@ -88,3 +88,24 @@ function randRange(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
+
+
+function testFunct2Node() {
+
+	let STRIP_COMMENTS = /(\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s*=[^,\)]*(('(?:\\'|[^'\r\n])*')|("(?:\\"|[^"\r\n])*"))|(\s*=[^,\)]*))/mg;
+	let methods = getAllMethods(Math);
+
+	methods.forEach(function(val, idx, array) {
+		console.log(val + ' -> ' + Math[val].toString().replace(STRIP_COMMENTS, ''));// anzahle parameter: 'methodname.length'
+	});
+
+	
+}
+
+function getAllMethods(object) {
+    return Object.getOwnPropertyNames(object).filter(function(property) {
+        return typeof object[property] == 'function';
+    });
+}
+
