@@ -9,11 +9,11 @@ function initApp(){
 	addRandomNodes();
 	addRandomXYConnections(5,15);
 
-
+/*
 	let rIn = document.querySelector('#editor').getRandomInputPort();
 	let tempCon = new FbpConnection([150,150], [100,100]);
 
-	/*
+	
 	tempCon.inputPort = rIn;
 	tempCon.setAttribute('slot', 'connections');
 	document.querySelector('#editor').appendChild(tempCon);

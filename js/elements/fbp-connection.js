@@ -252,8 +252,8 @@ export class FbpConnection extends FbpBaseMixin(PolymerElement) {
 		this._pIn = document.getElementById(newValue);
 
 		if(this._pIn) {
-			this._pIn.dispatchEvent(new CustomEvent('kick', {detail: {kicked: true}}));
-			this._pIn.requestConnection();
+			//this._pIn.dispatchEvent(new CustomEvent('kick', {detail: {kicked: true}}));
+			//this._pIn.requestConnection();
 		}
 	}
 	/*
